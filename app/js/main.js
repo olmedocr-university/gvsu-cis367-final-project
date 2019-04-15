@@ -1,10 +1,12 @@
 import * as THREE from 'three';
-import TrackballControls from 'three-trackballcontrols';
 import Alien from './models/Alien';
+
+let sphere;
 
 export default class App {
     constructor() {
         const c = document.getElementById('mycanvas');
+        document.onkeydown = this.onKeyPressed;
         // Enable antialias for smoother lines
         this.renderer = new THREE.WebGLRenderer({canvas: c, antialias: true});
         this.scene = new THREE.Scene();
@@ -15,16 +17,7 @@ export default class App {
         this.camera = new THREE.PerspectiveCamera(75, 4 / 3, 0.5, 500);
         // Place the camera at (0,0,100)
         this.camera.position.z = 100;
-        this.camera.position.y = 10;
-
-        // const orbiter = new OrbitControls(this.camera);
-        // orbiter.enableZoom = false;
-        // orbiter.update();
-        this.tracker = new TrackballControls(this.camera);
-        this.tracker.rotateSpeed = 2.0;
-        // Allow zoom and pan
-        this.tracker.noZoom = false;
-        this.tracker.noPan = false;
+        this.camera.position.y = 0;
 
         let axesHelper = new THREE.AxesHelper(50);
         this.scene.add(axesHelper);
@@ -36,6 +29,14 @@ export default class App {
         this.myAlien = new Alien();
         this.scene.add(this.myAlien);
 
+        let sphereGeometry = new THREE.DodecahedronGeometry(10, 1);
+        let sphereMaterial = new THREE.MeshStandardMaterial({color: 0xe5f2f2});
+        sphereMaterial.flatShading = true;
+        sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        this.scene.add(sphere);
+
+        this.initLaneSystem();
+
         window.addEventListener('resize', () => this.resizeHandler());
         this.resizeHandler();
         requestAnimationFrame(() => this.render());
@@ -43,7 +44,6 @@ export default class App {
 
     render() {
         this.renderer.render(this.scene, this.camera);
-        this.tracker.update();
 
         // setup the render function to "autoloop"
         requestAnimationFrame(() => this.render());
@@ -61,6 +61,55 @@ export default class App {
         canvas.height = h;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(w, h);
-        this.tracker.handleResize();
+    }
+
+    onKeyPressed(event) {
+        if (event.code === "ArrowLeft") {
+            // LEFT
+            // move current lane to left if possible
+            sphere.changeLane("left");
+        } else if (event.code === "ArrowRight") {
+            // LEFT
+            // move current lane to left if possible
+            sphere.changeLane("right");
+        }
+    }
+
+    initLaneSystem(){
+        const lanes = {
+            LEFT: "left",
+            CENTER: "center",
+            RIGHT: "right"
+        };
+
+        THREE.Mesh.prototype.lane = lanes.CENTER;
+
+        THREE.Mesh.prototype.changeLane = function (direction) {
+            switch (this.lane) {
+                case lanes.LEFT:
+                    if (direction === "right") {
+                        sphere.position.x = 0;
+                        this.lane = lanes.CENTER;
+                    }
+                    break;
+                case lanes.CENTER:
+                    if (direction === "left") {
+                        sphere.position.x = -10;
+                        this.lane = lanes.LEFT;
+                    } else if (direction === "right") {
+                        sphere.position.x = 10;
+                        this.lane = lanes.RIGHT;
+                    }
+                    break;
+                case lanes.RIGHT:
+                    if (direction === "left") {
+                        sphere.position.x = 0;
+                        this.lane = lanes.CENTER;
+                    }
+                    break;
+                default:
+                // do nothing (invalid movement)
+            }
+        };
     }
 }
