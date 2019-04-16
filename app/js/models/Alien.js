@@ -15,7 +15,7 @@ export class Alien extends THREE.Group {
 let max = 1.3;
 let min = .7;
 let scale = 1;
-let scaleSpeed = .000000000001; // scale per millisecond
+let scaleSpeed = .01; // scale per millisecond
 let growing = true;
 
 export default class Snalien extends THREE.Group {
@@ -37,10 +37,10 @@ export default class Snalien extends THREE.Group {
     }
 
     animate(timeSpan) {
-        /*if (growing)
-            scale += scaleSpeed * timeSpan;
+        if (growing)
+            scale += scaleSpeed;// * timeSpan;
         else
-            scale -= scaleSpeed * timeSpan
+            scale -= scaleSpeed;// * timeSpan;
 
         this.scale.z = scale;//set(THREE.Vector3(1, 1, scale));
         console.log(scale);
@@ -49,7 +49,6 @@ export default class Snalien extends THREE.Group {
             console.log(growing);
         }
         if(scale < min)
-            growing = !growing;*/ // Being weird
-        this.rotateOnAxis(new Vector3(0, 0, 1), .5 / timeSpan);
+            growing = !growing;
     }
 }
