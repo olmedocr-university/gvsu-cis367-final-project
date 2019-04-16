@@ -37,10 +37,20 @@ module.exports = {
         test: /\.js$/,
         // include: JS_PATH,
         exclude: /(node_module|bower_components)/,
-        use: 'babel-loader',
+        loader: 'babel-loader',
         // query: {
         //   cacheDirectory: true
         // }
+        options: {
+          presets: [
+            '@babel/preset-env',
+            {
+              plugins: [
+                '@babel/plugin-proposal-class-properties'
+              ]
+            }
+          ]
+        },
       },
       // {
       //   test: /\.glsl$/,
