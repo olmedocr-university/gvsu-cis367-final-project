@@ -84,6 +84,7 @@ export default class App {
                 if (this.bulletTimer.getElapsedTime() < Constants.bulletLifespan) {
                     this.bullet.translateZ(Constants.bulletSpeed);
                 } else {
+                    score++;
                     this.bulletTimer.stop();
                     this.scene.remove(this.bullet);
                 }
