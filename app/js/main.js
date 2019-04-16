@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Snalien from './models/Snalien';
 import RollingAlien from './models/RollingAlien';
+import UFO from './models/UFO';
 import Alien from './models/Alien';
 import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
@@ -27,12 +28,27 @@ export default class App {
 
         this.setupLight();
 
+        // generate 10 aliens randomly
+        this.myAliens = new Array(10); 
+        for (var i = 0; i < 10; i++) {
+        var min=0; 
+        var max=3;  
+        var random = Math.floor(Math.random() * (+max - +min)) + +min;
+            if (random % 3 == 0)
+                this.myAliens[i] = new UFO();
+            else if (random % 3 == 1) {
+                this.myAliens[i] = new Snalien();
+            } else if ( random % 3 == 2) {
+                this.myAliens[i] = new RollingAlien();
+            }
+
+            this.myAliens[i].position.y = 110;
+            this.myAliens[i].position.x = 10 * i + -500; // placing aliens
+            this.scene.add(this.myAliens[i]);
+        }
+
         this.space = new Space();
         this.scene.add(this.space);
-
-        //
-        this.setupAliens();
-        //
 
         this.spaceship = new Spaceship();
         this.spaceship.position.y = Constants.spaceshipPositionY;
@@ -49,11 +65,14 @@ export default class App {
         lastRenderTime = now;
         scoreLabel.textContent = "score : " + deltaTime; // score;
 
-        this.myAlien.animate(deltaTime);
+        for ( var i = 0; i < 10; i++) {
+            this.myAliens[i].animate(deltaTime);
+        }
+        //this.myAlien.animate(deltaTime);
 
         this.renderer.render(this.scene, this.camera);
-        this.space.rotation.x += Constants.spaceRotationSpeed;
-        this.spaceship.rotation.x -= this.space.rotation.x;
+        //this.space.rotation.x += Constants.spaceRotationSpeed;
+        //this.spaceship.rotation.x -= this.space.rotation.x;
 
         if (this.bulletTimer.running) {
             if (this.bulletTimer.getElapsedTime() < Constants.bulletLifespan) {
@@ -63,10 +82,6 @@ export default class App {
                 this.scene.remove(this.bullet);
             }
         }
-
-        //
-        this.animateAliens(this.myAlien);
-        //
 
         // setup the render function to "autoloop"
         requestAnimationFrame(() => this.render());
@@ -85,20 +100,6 @@ export default class App {
         lightOne.position.set(Constants.lightPositionX, Constants.lightPositionY, Constants.lightPositionZ);
         this.scene.add(lightOne);
     }
-
-    //
-    setupAliens() {
-        this.myAlien = new RollingAlien();
-
-        this.myAlien.position.set(Constants.lanes.CENTER, Math.cos(THREE.Math.degToRad(180)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(180)) * Constants.spaceRadius);
-        this.scene.add(this.myAlien);
-    }
-
-    animateAliens(alien) {
-        alien.rotationAngle += Constants.alienRotationSpeed;
-        alien.position.set(Constants.lanes.CENTER, Math.cos(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius);
-    }
-    //
 
     resizeHandler() {
         const canvas = document.getElementById("mycanvas");

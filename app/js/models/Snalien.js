@@ -3,6 +3,8 @@ import { Vector3 } from 'three';
 import Alien from './Alien';
 
 /* I'm not sure about this, but I think that it's better if you import in the models just the modules that you use:
+    Importing the way we it is shouldn't have any cost from what I remember, It's for readability to import the other way 
+    but I wouldn't care either option we go with!
 
 import {BoxBufferGeometry, MeshStandardMaterial, Mesh, Vector3, ConeBufferGeometry, CircleBufferGeometry, MeshBasicMaterial} from "three";
 import Constants from "../Constants";
@@ -15,11 +17,12 @@ let fGeo = new BoxBufferGeometry(4, 8, 16);
  */
 
 
+// These variable here might have some cost as opposed to being in the class
 
 let max = 1.3;
 let min = .7;
 let scale = 1;
-let scaleSpeed = .01; // scale per millisecond
+let scaleSpeed = .0003; // scale per millisecond
 let growing = true;
 
 export default class Snalien extends Alien {
@@ -65,15 +68,18 @@ export default class Snalien extends Alien {
 
     animate(timeSpan) {
         if (growing)
-            scale += scaleSpeed;// * timeSpan;
+            scale += scaleSpeed * timeSpan;// * timeSpan;
         else
-            scale -= scaleSpeed;// * timeSpan;
+            scale -= scaleSpeed * timeSpan;// * timeSpan;
 
         this.scale.z = scale;//set(THREE.Vector3(1, 1, scale));
         if(scale > max) {
             growing = !growing;
+            scale = max;
         }
-        if(scale < min)
+        if(scale < min) {
+            scale = min;
             growing = !growing;
+        }
     }
 }
