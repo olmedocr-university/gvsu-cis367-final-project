@@ -2,6 +2,20 @@ import * as THREE from 'three';
 import { Vector3 } from 'three';
 import Alien from './Alien';
 
+/* I'm not sure about this, but I think that it's better if you import in the models just the modules that you use:
+
+import {BoxBufferGeometry, MeshStandardMaterial, Mesh, Vector3, ConeBufferGeometry, CircleBufferGeometry, MeshBasicMaterial} from "three";
+import Constants from "../Constants";
+
+[...]
+
+let fGeo = new BoxBufferGeometry(4, 8, 16);
+
+
+ */
+
+
+
 let max = 1.3;
 let min = .7;
 let scale = 1;
