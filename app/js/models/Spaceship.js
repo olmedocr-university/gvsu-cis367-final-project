@@ -1,7 +1,10 @@
-import {DodecahedronGeometry, MeshStandardMaterial, Mesh, Group} from 'three';
+import * as THREE from 'three';
+import { Vector3 } from 'three';
+import Alien from './Alien';
+
 import Constants from '../Constants'
 
-export default class Spaceship extends Group {
+export default class Spaceship extends Alien {
     currentLane = Constants.lanes.CENTER;
     constructor () { // number of spokes on the wheel
         super();    // invoke the super class constructor
@@ -12,15 +15,15 @@ export default class Spaceship extends Group {
 
         this.add(spaceship)*/
 
-        var bGeo = new THREE.CylinderBufferGeometry(3, 2, 8, 16, 1);
-        var bMat = new MeshStandardMaterial({ color: 0xe5f2f2 });
+        var bGeo = new THREE.CylinderBufferGeometry(5, 3, 12, 16, 1);
+        var bMat = new THREE.MeshStandardMaterial({ color: 0xe5f2f2 });
 
         var body = new THREE.Mesh(bGeo, bMat);
         body.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
         body.position.set(0, 0, 0);
         this.add(body);
 
-        var wGeo = new THREE.BoxBufferGeometry(10, .2, 2);
+        var wGeo = new THREE.BoxBufferGeometry(17, .2, 4);
         var wing = new THREE.Mesh(wGeo, bMat);
         wing.position.set(0, 0, 2);
         this.add(wing);
@@ -28,15 +31,15 @@ export default class Spaceship extends Group {
         var winGeo = new THREE.SphereBufferGeometry(1, 8, 6);
         var winMat = new THREE.MeshToonMaterial({ color: 0x82f8ff });
 
-        var win = new THREE.mesh(winGeo, winMat);
-        win.position.set(0, 1.4, 0);
+        var win = new THREE.Mesh(winGeo, winMat);
+        win.position.set(0, 5, 0);
         this.add(win);
 
-        var tGeo = new THEE.CylinderBufferGeometry(2, 1.7, 1, 16, 1);
-        var tMat = new MeshStandardMaterial({ color: 0x000000 });
+        var tGeo = new THREE.CylinderBufferGeometry(2, 1.7, 1, 16, 1);
+        var tMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
 
-        var thruster = new THREE.mesh(tGeo, tMat);
-        thruster.position.set(0, 0, 4.5);
+        var thruster = new THREE.Mesh(tGeo, tMat);
+        thruster.position.set(0, 0, 6.5);
         thruster.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
         this.add(thruster);
     }

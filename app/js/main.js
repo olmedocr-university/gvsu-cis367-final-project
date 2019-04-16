@@ -43,7 +43,7 @@ export default class App {
             }
 
             this.myAliens[i].position.y = 110;
-            this.myAliens[i].position.x = 10 * i + -50; // placing aliens
+            this.myAliens[i].position.x = 10 * i + -500; // placing aliens
             this.scene.add(this.myAliens[i]);
         }
 
@@ -71,8 +71,8 @@ export default class App {
         //this.myAlien.animate(deltaTime);
 
         this.renderer.render(this.scene, this.camera);
-        this.space.rotation.x += Constants.spaceRotationSpeed;
-        this.spaceship.rotation.x -= this.space.rotation.x;
+        //this.space.rotation.x += Constants.spaceRotationSpeed;
+        //this.spaceship.rotation.x -= this.space.rotation.x;
 
         if (this.bulletTimer.running) {
             if (this.bulletTimer.getElapsedTime() < Constants.bulletLifespan) {
