@@ -29,7 +29,7 @@ export default class App {
         this.setupLight();
 
         // generate 10 aliens randomly
-        this.myAliens = new Array(10);
+        /*this.myAliens = new Array(10);
         for (var i = 0; i < 10; i++) {
             var min = 0;
             var max = 3;
@@ -43,9 +43,9 @@ export default class App {
             }
 
             this.myAliens[i].position.y = 110;
-            this.myAliens[i].position.x = 10 * i + -500; // placing aliens
+            this.myAliens[i].position.x = 10 * i + -50; // placing aliens
             this.scene.add(this.myAliens[i]);
-        }
+        }*/
 
         this.space = new Space();
         this.scene.add(this.space);
@@ -92,6 +92,12 @@ export default class App {
 
             //
             this.animateAliens(this.myAlien);
+            for (var i = 0; i < 10; i++) {
+                this.animateAliens(this.myAliens[i]);
+            }
+            for (var i = 0; i < 10; i++) {
+                this.myAliens[i].animate(deltaTime);
+            }
             //
 
             // setup the render function to "autoloop"
@@ -121,11 +127,42 @@ export default class App {
 
         this.myAlien.position.set(Constants.lanes.CENTER, Math.cos(THREE.Math.degToRad(180)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(180)) * Constants.spaceRadius);
         this.scene.add(this.myAlien);
+
+        // generate 10 aliens randomly
+        this.myAliens = new Array(10);
+        for (var i = 0; i < 10; i++) {
+            var min = 0;
+            var max = 3;
+            var random = Math.floor(Math.random() * (+max - +min)) + +min;
+            if (random % 3 === 0)
+                this.myAliens[i] = new UFO();
+            else if (random % 3 === 1) {
+                this.myAliens[i] = new Snalien();
+            } else if (random % 3 === 2) {
+                this.myAliens[i] = new RollingAlien();
+            }
+
+            //this.myAliens[i].position.y = 110;
+            //this.myAliens[i].position.x = 10 * i + -50; // placing aliens
+            random = Math.floor(Math.random() * (+max - +min)) + +min;
+            
+            if (random % 3 === 0)
+                this.myAliens[i].position.set(Constants.lanes.LEFT, 0, 0);
+            else if (random % 3 === 1) {
+                this.myAliens[i].position.set(Constants.lanes.CENTER, 0, 0);
+            } else if (random % 3 === 2) {
+                this.myAliens[i].position.set(Constants.lanes.RIGHT, 0, 0);
+            }
+            
+            console.log(this.myAliens[i].rotationAngle);
+            this.myAliens[i].position.set(this.myAliens[i].position.x, Math.cos(THREE.Math.degToRad(random * 360)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(360 * random)) * Constants.spaceRadius);
+            this.scene.add(this.myAliens[i]);
+        }
     }
 
     animateAliens(alien) {
         alien.rotationAngle += Constants.alienRotationSpeed;
-        alien.position.set(Constants.lanes.CENTER, Math.cos(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius);
+        alien.position.set(alien.position.x, Math.cos(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius);
     }
 
     //
