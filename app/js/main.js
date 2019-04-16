@@ -60,7 +60,7 @@ export default class App {
         this.spaceship.rotation.x -= 0.02;
 
         if (this.clock.running) {
-            if (this.clock.getElapsedTime() < 1000) {
+            if (this.clock.getElapsedTime() < 1) {
                 this.bullet.translateZ(-1);
             } else {
                 this.clock.stop();
