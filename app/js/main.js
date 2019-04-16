@@ -27,15 +27,12 @@ export default class App {
 
         this.setupLight();
 
-        this.myAlien = new RollingAlien();
-        //this.myAlien = new Snalien();
-        this.myAlien.position.y = 110;
-        let axis = new THREE.Vector3(1, .3, 0);
-        this.myAlien.rotateOnAxis(axis, 30);
-        this.scene.add(this.myAlien);
-
         this.space = new Space();
         this.scene.add(this.space);
+
+        //
+        this.setupAliens();
+        //
 
         this.spaceship = new Spaceship();
         this.spaceship.position.y = Constants.spaceshipPositionY;
@@ -67,6 +64,10 @@ export default class App {
             }
         }
 
+        //
+        this.animateAliens(this.myAlien);
+        //
+
         // setup the render function to "autoloop"
         requestAnimationFrame(() => this.render());
     }
@@ -84,6 +85,20 @@ export default class App {
         lightOne.position.set(Constants.lightPositionX, Constants.lightPositionY, Constants.lightPositionZ);
         this.scene.add(lightOne);
     }
+
+    //
+    setupAliens() {
+        this.myAlien = new RollingAlien();
+
+        this.myAlien.position.set(Constants.lanes.CENTER, Math.cos(THREE.Math.degToRad(180)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(180)) * Constants.spaceRadius);
+        this.scene.add(this.myAlien);
+    }
+
+    animateAliens(alien) {
+        alien.rotationAngle += Constants.alienRotationSpeed;
+        alien.position.set(Constants.lanes.CENTER, Math.cos(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius, Math.sin(THREE.Math.degToRad(alien.rotationAngle)) * Constants.spaceRadius);
+    }
+    //
 
     resizeHandler() {
         const canvas = document.getElementById("mycanvas");
