@@ -22,7 +22,7 @@ let fGeo = new BoxBufferGeometry(4, 8, 16);
 let max = 1.3;
 let min = .7;
 let scale = 1;
-let scaleSpeed = .01; // scale per millisecond
+let scaleSpeed = .0003; // scale per millisecond
 let growing = true;
 
 export default class Snalien extends Alien {
@@ -68,15 +68,18 @@ export default class Snalien extends Alien {
 
     animate(timeSpan) {
         if (growing)
-            scale += scaleSpeed;// * timeSpan;
+            scale += scaleSpeed * timeSpan;// * timeSpan;
         else
-            scale -= scaleSpeed;// * timeSpan;
+            scale -= scaleSpeed * timeSpan;// * timeSpan;
 
         this.scale.z = scale;//set(THREE.Vector3(1, 1, scale));
         if(scale > max) {
             growing = !growing;
+            scale = max;
         }
-        if(scale < min)
+        if(scale < min) {
+            scale = min;
             growing = !growing;
+        }
     }
 }

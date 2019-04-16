@@ -6,7 +6,7 @@ import Alien from './Alien';
 let max = 2;
 let min = 0;
 let zPos = 1;
-let moveSpeed = .05; // scale per millisecond
+let moveSpeed = .001; // scale per millisecond
 let up = true;
 
 export default class UFO extends Alien {
@@ -49,19 +49,25 @@ export default class UFO extends Alien {
             this.add(light);
         }
 
-        this.rotateOnAxis(new THREE.Vector3(1, 0 , 0), Math.PI);
+        this.rotateOnAxis(new THREE.Vector3(-1, 0 , 0), Math.PI/2);
     }
     
     animate(timeSpan) {
-        this.rotateOnAxis(new Vector3(0, 0, 1), .2/timeSpan);
+        this.rotateOnAxis(new Vector3(0, 0, 1), .0009 * timeSpan);
 
         if (up)
-            zPos += moveSpeed;// * timeSpan;
+            zPos += moveSpeed * timeSpan;
         else
-            zPos -= moveSpeed;// * timeSpan;
+            zPos -= moveSpeed * timeSpan;
 
         this.position.z = zPos;//set(THREE.Vector3(1, 1, scale));
-        if(zPos > max || zPos < min)
+        if(zPos > max) {
             up = !up;
+            zPos = max;
+        }
+        if(zPos < min) {
+            zPos = min;
+            up = !up;
+        }
     }
 }

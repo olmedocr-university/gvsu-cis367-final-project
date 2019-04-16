@@ -55,6 +55,6 @@ export default class RollingAlien extends Alien {
     }
 
     animate(timeSpan) {
-        this.rotateOnAxis(new Vector3(1, 0, 0), .5/timeSpan);
+        this.rotateOnAxis(new Vector3(1, 0, 0), .002 * timeSpan);
     }
 }

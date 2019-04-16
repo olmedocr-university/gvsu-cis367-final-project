@@ -28,13 +28,24 @@ export default class App {
 
         this.setupLight();
 
-        //this.myAlien = new RollingAlien();
-        //this.myAlien = new Snalien();
-        this.myAlien = new UFO();
-        this.myAlien.position.y = 110;
-        let axis = new THREE.Vector3(1, 0, 0);
-        ///this.myAlien.rotateOnAxis(axis, -30);
-        this.scene.add(this.myAlien);
+        // generate 10 aliens randomly
+        this.myAliens = new Array(10); 
+        for (var i = 0; i < 10; i++) {
+        var min=0; 
+        var max=3;  
+        var random = Math.floor(Math.random() * (+max - +min)) + +min;
+            if (random % 3 == 0)
+                this.myAliens[i] = new UFO();
+            else if (random % 3 == 1) {
+                this.myAliens[i] = new Snalien();
+            } else if ( random % 3 == 2) {
+                this.myAliens[i] = new RollingAlien();
+            }
+
+            this.myAliens[i].position.y = 110;
+            this.myAliens[i].position.x = 10 * i + -50; // placing aliens
+            this.scene.add(this.myAliens[i]);
+        }
 
         this.space = new Space();
         this.scene.add(this.space);
@@ -54,7 +65,10 @@ export default class App {
         lastRenderTime = now;
         scoreLabel.textContent = "score : " + deltaTime; // score;
 
-        this.myAlien.animate(deltaTime);
+        for ( var i = 0; i < 10; i++) {
+            this.myAliens[i].animate(deltaTime);
+        }
+        //this.myAlien.animate(deltaTime);
 
         this.renderer.render(this.scene, this.camera);
         this.space.rotation.x += Constants.spaceRotationSpeed;
