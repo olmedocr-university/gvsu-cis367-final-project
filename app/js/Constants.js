@@ -12,6 +12,8 @@ export default class Constants {
     static spaceHeight = 200;
     static spaceSegments = 20;
 
+    static alienRotationSpeed = this.spaceRotationSpeed * 100;
+
     static lightPositionX = 40;
     static lightPositionY = 40;
     static lightPositionZ = -50;
