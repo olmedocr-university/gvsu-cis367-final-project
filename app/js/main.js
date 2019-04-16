@@ -3,6 +3,7 @@ import Alien from './models/Alien';
 import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
 
+let lastRenderTime = 0;
 export default class App {
     constructor() {
         const canvas = document.getElementById('mycanvas');
