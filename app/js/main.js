@@ -1,13 +1,21 @@
 import * as THREE from 'three';
+import Snalien from './models/Snalien';
+import RollingAlien from './models/RollingAlien';
 import Alien from './models/Alien';
 import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
 import Space from './models/Space'
 import Constants from './Constants';
 
+let lastRenderTime = 0;
+let score = 0;
+let scoreLabel;
 export default class App {
     constructor() {
         const canvas = document.getElementById('mycanvas');
+        scoreLabel = document.getElementById('score');
+        scoreLabel.textContent = score;
+
         document.onkeydown = this.handleKeyPressed.bind(this);
         // Enable antialias for smoother lines
         this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
@@ -19,7 +27,11 @@ export default class App {
 
         this.setupLight();
 
-        this.myAlien = new Alien();
+        this.myAlien = new RollingAlien();
+        //this.myAlien = new Snalien();
+        this.myAlien.position.y = 110;
+        let axis = new THREE.Vector3(1, .3, 0);
+        this.myAlien.rotateOnAxis(axis, 30);
         this.scene.add(this.myAlien);
 
         this.space = new Space();
@@ -35,6 +47,13 @@ export default class App {
     }
 
     render() {
+        const now = Date.now();
+        const deltaTime = now - lastRenderTime; // in millisecond
+        lastRenderTime = now;
+        scoreLabel.textContent = "score : " + deltaTime; // score;
+
+        this.myAlien.animate(deltaTime);
+
         this.renderer.render(this.scene, this.camera);
         this.space.rotation.x += Constants.spaceRotationSpeed;
         this.spaceship.rotation.x -= this.space.rotation.x;
