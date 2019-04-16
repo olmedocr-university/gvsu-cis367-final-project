@@ -1,5 +1,7 @@
 import * as THREE from 'three';
-import Snalien from './models/Alien';
+import Snalien from './models/Snalien';
+import RollingAlien from './models/RollingAlien';
+import Alien from './models/Alien';
 import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
 
@@ -20,9 +22,10 @@ export default class App {
         lightOne.position.set(40, 40, -50);
         this.scene.add(lightOne);
 
-        this.myAlien = new Snalien();
-        this.myAlien.position.y = 100;
-        let axis = new THREE.Vector3(.5, .5, 0);
+        this.myAlien = new RollingAlien();
+        //this.myAlien = new Snalien();
+        this.myAlien.position.y = 110;
+        let axis = new THREE.Vector3(1, .3, 0);
         this.myAlien.rotateOnAxis(axis, 30);
         this.scene.add(this.myAlien);
 
