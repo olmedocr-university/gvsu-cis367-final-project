@@ -64,36 +64,40 @@ export default class App {
     }
 
     render() {
-        const now = Date.now();
-        const deltaTime = now - lastRenderTime; // in millisecond
-        lastRenderTime = now;
-        scoreLabel.textContent = "score : " + deltaTime; // score;
+        if (score < 10) {
+            const now = Date.now();
+            const deltaTime = now - lastRenderTime; // in millisecond
+            lastRenderTime = now;
+            scoreLabel.textContent = "score : " + score; // score;
 
-        for (var i = 0; i < 10; i++) {
-            this.myAliens[i].animate(deltaTime);
-        }
-        this.spaceship.animate(deltaTime);
-        //this.myAlien.animate(deltaTime);
-
-        this.renderer.render(this.scene, this.camera);
-        //this.space.rotation.x += Constants.spaceRotationSpeed;
-        //this.spaceship.rotation.x -= this.space.rotation.x;
-
-        if (this.bulletTimer.running) {
-            if (this.bulletTimer.getElapsedTime() < Constants.bulletLifespan) {
-                this.bullet.translateZ(Constants.bulletSpeed);
-            } else {
-                this.bulletTimer.stop();
-                this.scene.remove(this.bullet);
+            for (var i = 0; i < 10; i++) {
+                this.myAliens[i].animate(deltaTime);
             }
+            this.spaceship.animate(deltaTime);
+            //this.myAlien.animate(deltaTime);
+
+            this.renderer.render(this.scene, this.camera);
+            //this.space.rotation.x += Constants.spaceRotationSpeed;
+            //this.spaceship.rotation.x -= this.space.rotation.x;
+
+            if (this.bulletTimer.running) {
+                if (this.bulletTimer.getElapsedTime() < Constants.bulletLifespan) {
+                    this.bullet.translateZ(Constants.bulletSpeed);
+                } else {
+                    this.bulletTimer.stop();
+                    this.scene.remove(this.bullet);
+                }
+            }
+
+            //
+            this.animateAliens(this.myAlien);
+            //
+
+            // setup the render function to "autoloop"
+            requestAnimationFrame(() => this.render());
+        } else {
+            scoreLabel.textContent = "you won!";
         }
-
-        //
-        this.animateAliens(this.myAlien);
-        //
-
-        // setup the render function to "autoloop"
-        requestAnimationFrame(() => this.render());
     }
 
     setupCamera() {
