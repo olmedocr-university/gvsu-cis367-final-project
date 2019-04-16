@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Vector3 } from 'three';
 import Alien from './Alien';
 
-
+let toRad = Math.PI/180;
 export default class RollingAlien extends Alien {
     constructor () {
         super();
@@ -34,22 +34,22 @@ export default class RollingAlien extends Alien {
         var hornMat = new THREE.MeshStandardMaterial({color: 0xa3adff});
 
         var leftH = new THREE.Mesh(hornGeo, hornMat);
-        leftH.rotateOnAxis(new Vector3(0, 0, -1), 90);
+        leftH.rotateOnAxis(new Vector3(0, 0, -1), 60 * toRad);
         leftH.position.set(7, 0, 0);
         this.add(leftH);
 
         var leftH2 = new THREE.Mesh(hornGeo, hornMat);
-        leftH2.rotateOnAxis(new Vector3(0, 0, -1), 45);
+        leftH2.rotateOnAxis(new Vector3(0, 0, -1), 120 * toRad);
         leftH2.position.set(7, 0, 0);
         this.add(leftH2);
 
         var rightH = new THREE.Mesh(hornGeo, hornMat);
-        rightH.rotateOnAxis(new Vector3(0, 0, 1), 90);
+        rightH.rotateOnAxis(new Vector3(0, 0, 1), 120 * toRad);
         rightH.position.set(-7, 0, 0);
         this.add(rightH);
 
         var rightH2 = new THREE.Mesh(hornGeo, hornMat);
-        rightH2.rotateOnAxis(new Vector3(0, 0, 1), 45);
+        rightH2.rotateOnAxis(new Vector3(0, 0, 1), 60 * toRad);
         rightH2.position.set(-7, 0, 0);
         this.add(rightH2);
     }

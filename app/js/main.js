@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Snalien from './models/Snalien';
 import RollingAlien from './models/RollingAlien';
+import UFO from './models/UFO';
 import Alien from './models/Alien';
 import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
@@ -27,11 +28,12 @@ export default class App {
 
         this.setupLight();
 
-        this.myAlien = new RollingAlien();
+        //this.myAlien = new RollingAlien();
         //this.myAlien = new Snalien();
+        this.myAlien = new UFO();
         this.myAlien.position.y = 110;
-        let axis = new THREE.Vector3(1, .3, 0);
-        this.myAlien.rotateOnAxis(axis, 30);
+        let axis = new THREE.Vector3(1, 0, 0);
+        ///this.myAlien.rotateOnAxis(axis, -30);
         this.scene.add(this.myAlien);
 
         this.space = new Space();
