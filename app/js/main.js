@@ -68,6 +68,7 @@ export default class App {
         for ( var i = 0; i < 10; i++) {
             this.myAliens[i].animate(deltaTime);
         }
+        this.spaceship.animate(deltaTime);
         //this.myAlien.animate(deltaTime);
 
         this.renderer.render(this.scene, this.camera);

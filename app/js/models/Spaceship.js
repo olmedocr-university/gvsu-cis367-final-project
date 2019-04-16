@@ -28,7 +28,7 @@ export default class Spaceship extends Alien {
         wing.position.set(0, 0, 2);
         this.add(wing);
 
-        var winGeo = new THREE.SphereBufferGeometry(1, 8, 6);
+        var winGeo = new THREE.SphereBufferGeometry(2, 8, 6);
         var winMat = new THREE.MeshToonMaterial({ color: 0x82f8ff });
 
         var win = new THREE.Mesh(winGeo, winMat);
@@ -42,6 +42,14 @@ export default class Spaceship extends Alien {
         thruster.position.set(0, 0, 6.5);
         thruster.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
         this.add(thruster);
+
+        var fGeo = new THREE.ConeBufferGeometry(1, 5, 16);
+        var fMat = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+
+        this.flame = new THREE.Mesh(fGeo, fMat);
+        this.flame.rotateOnAxis(new Vector3(1, 0, 0), 90 * Math.PI / 180);
+        this.flame.position.set(0, 0, 7);
+        this.add(this.flame);
     }
 
     changeLane(direction) {
@@ -72,7 +80,29 @@ export default class Spaceship extends Alien {
         }
     }
 
+    
     animate(timeSpan) {
         // nothing yet.
+        //this.rotateOnAxis(new Vector3(0, 0, 1), .0009 * timeSpan);
+
+        if (up)
+            zPos += moveSpeed * timeSpan;
+        else
+            zPos -= moveSpeed * timeSpan;
+
+        this.flame.position.z = zPos;//set(THREE.Vector3(1, 1, scale));
+        if (zPos > max) {
+            up = !up;
+            zPos = max;
+        }
+        if (zPos < min) {
+            zPos = min;
+            up = !up;
+        }
     }
 }
+let max = 9;
+let min = 7;
+let zPos = 7;
+let moveSpeed = .005; // scale per millisecond
+let up = true;
