@@ -10,20 +10,10 @@ export default class App {
         // Enable antialias for smoother lines
         this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
         this.scene = new THREE.Scene();
-        // Use perspective camera:
-        //   Field of view: 75 degrees
-        //   Screen aspect ration 4:3
-        //   Near plane at z=0.5, far plane at z=500
-        this.camera = new THREE.PerspectiveCamera(90, 4 / 3, 0.1, 500);
-        // Place the camera at (0,0,100)
-        this.camera.position.z = 20;
-        this.camera.position.y = 120;
-        this.camera.rotateX(THREE.Math.degToRad(-60));
 
-        this.clock = new THREE.Clock(false);
+        this.setupCamera();
 
-        let axesHelper = new THREE.AxesHelper(50);
-        this.scene.add(axesHelper);
+        this.bulletTimer = new THREE.Clock(false);
 
         const lightOne = new THREE.DirectionalLight(0xFFFFFF, 1.0);
         lightOne.position.set(40, 40, -50);
@@ -59,17 +49,25 @@ export default class App {
         this.space.rotation.x += 0.02;
         this.spaceship.rotation.x -= 0.02;
 
-        if (this.clock.running) {
-            if (this.clock.getElapsedTime() < 1) {
+        if (this.bulletTimer.running) {
+            if (this.bulletTimer.getElapsedTime() < 1) {
                 this.bullet.translateZ(-1);
             } else {
-                this.clock.stop();
+                this.bulletTimer.stop();
                 this.scene.remove(this.bullet);
             }
         }
 
         // setup the render function to "autoloop"
         requestAnimationFrame(() => this.render());
+    }
+
+    setupCamera() {
+        this.camera = new THREE.PerspectiveCamera(70, 4 / 3, 0.1, 500);
+        // Place the camera at (0,0,100)
+        this.camera.position.z = 10;
+        this.camera.position.y = 150;
+        this.camera.rotateX(THREE.Math.degToRad(-60));
     }
 
     resizeHandler() {
@@ -91,14 +89,14 @@ export default class App {
             this.changeLane("left");
         } else if (event.code === "ArrowRight") {
             this.changeLane("right");
-        } else if (event.code === "Space" && !this.clock.running) {
+        } else if (event.code === "Space" && !this.bulletTimer.running) {
             this.bullet = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 4), new THREE.MeshBasicMaterial({
                 color: "aqua"
             }));
             this.bullet.position.copy(this.spaceship.getWorldPosition(new THREE.Vector3()));
             this.scene.add(this.bullet);
             console.log("Fire!");
-            this.clock.start();
+            this.bulletTimer.start();
         }
     }
 
