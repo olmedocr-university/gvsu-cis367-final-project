@@ -6,9 +6,14 @@ import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
 
 let lastRenderTime = 0;
+let score = 0;
+let scoreLabel;
 export default class App {
     constructor() {
         const canvas = document.getElementById('mycanvas');
+        scoreLabel = document.getElementById('score');
+        scoreLabel.textContent = score;
+
         document.onkeydown = this.handleKeyPressed.bind(this);
         // Enable antialias for smoother lines
         this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
@@ -55,6 +60,7 @@ export default class App {
         const now = Date.now();
         const deltaTime = now - lastRenderTime; // in millisecond
         lastRenderTime = now;
+        scoreLabel.textContent = "score : " + deltaTime; // score;
 
         this.myAlien.animate(deltaTime);
 
