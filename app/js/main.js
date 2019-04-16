@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Alien from './models/Alien';
+import Snalien from './models/Alien';
 import Spaceship from "./models/Spaceship";
 import Bullet from './models/Bullet'
 
@@ -20,7 +20,10 @@ export default class App {
         lightOne.position.set(40, 40, -50);
         this.scene.add(lightOne);
 
-        this.myAlien = new Alien();
+        this.myAlien = new Snalien();
+        this.myAlien.position.y = 100;
+        let axis = new THREE.Vector3(.5, .5, 0);
+        this.myAlien.rotateOnAxis(axis, 30);
         this.scene.add(this.myAlien);
 
         let spaceGeometry = new THREE.CylinderGeometry(70, 70, 200, 20);
@@ -46,6 +49,12 @@ export default class App {
     }
 
     render() {
+        const now = Date.now();
+        const deltaTime = now - lastRenderTime; // in millisecond
+        lastRenderTime = now;
+
+        this.myAlien.animate(deltaTime);
+
         this.renderer.render(this.scene, this.camera);
         this.space.rotation.x += 0.02;
         this.spaceship.rotation.x -= 0.02;

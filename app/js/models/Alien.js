@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 export class Alien extends THREE.Group {
     constructor (animate) { // number of spokes on the wheel
@@ -36,7 +37,7 @@ export default class Snalien extends THREE.Group {
     }
 
     animate(timeSpan) {
-        if (growing)
+        /*if (growing)
             scale += scaleSpeed * timeSpan;
         else
             scale -= scaleSpeed * timeSpan
@@ -48,6 +49,7 @@ export default class Snalien extends THREE.Group {
             console.log(growing);
         }
         if(scale < min)
-            growing = !growing;
+            growing = !growing;*/ // Being weird
+        this.rotateOnAxis(new Vector3(0, 0, 1), .5 / timeSpan);
     }
 }
