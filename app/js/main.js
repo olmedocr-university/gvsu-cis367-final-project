@@ -1,41 +1,53 @@
 import * as THREE from 'three';
 import Alien from './models/Alien';
-
-let sphere;
+import Spaceship from "./models/Spaceship";
+import Bullet from './models/Bullet'
 
 export default class App {
     constructor() {
-        const c = document.getElementById('mycanvas');
-        document.onkeydown = this.onKeyPressed;
+        const canvas = document.getElementById('mycanvas');
+        document.onkeydown = this.handleKeyPressed.bind(this);
         // Enable antialias for smoother lines
-        this.renderer = new THREE.WebGLRenderer({canvas: c, antialias: true});
+        this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
         this.scene = new THREE.Scene();
         // Use perspective camera:
         //   Field of view: 75 degrees
         //   Screen aspect ration 4:3
         //   Near plane at z=0.5, far plane at z=500
-        this.camera = new THREE.PerspectiveCamera(75, 4 / 3, 0.5, 500);
+        this.camera = new THREE.PerspectiveCamera(90, 4 / 3, 0.1, 500);
         // Place the camera at (0,0,100)
-        this.camera.position.z = 100;
-        this.camera.position.y = 0;
+        this.camera.position.z = 20;
+        this.camera.position.y = 120;
+        this.camera.rotateX(THREE.Math.degToRad(-60));
+
+        this.clock = new THREE.Clock(false);
 
         let axesHelper = new THREE.AxesHelper(50);
         this.scene.add(axesHelper);
 
         const lightOne = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-        lightOne.position.set(40, 40, 100);
+        lightOne.position.set(40, 40, -50);
         this.scene.add(lightOne);
 
         this.myAlien = new Alien();
         this.scene.add(this.myAlien);
 
-        let sphereGeometry = new THREE.DodecahedronGeometry(10, 1);
-        let sphereMaterial = new THREE.MeshStandardMaterial({color: 0xe5f2f2});
-        sphereMaterial.flatShading = true;
-        sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        this.scene.add(sphere);
+        let spaceGeometry = new THREE.CylinderGeometry(70, 70, 200, 20);
+        let spaceMaterial = new THREE.MeshPhongMaterial({color: 0xe5f2f2});
+        this.space = new THREE.Mesh(spaceGeometry, spaceMaterial);
+        this.space.rotateZ(THREE.Math.degToRad(90));
+        this.scene.add(this.space);
 
-        this.initLaneSystem();
+        this.lanes = {
+            LEFT: "left",
+            CENTER: "center",
+            RIGHT: "right"
+        };
+
+        this.lane = this.lanes.CENTER;
+        this.spaceship = new Spaceship();
+        this.spaceship.position.y = 80;
+        this.scene.add(this.spaceship);
 
         window.addEventListener('resize', () => this.resizeHandler());
         this.resizeHandler();
@@ -44,6 +56,17 @@ export default class App {
 
     render() {
         this.renderer.render(this.scene, this.camera);
+        this.space.rotation.x += 0.02;
+        this.spaceship.rotation.x -= 0.02;
+
+        if (this.clock.running) {
+            if (this.clock.getElapsedTime() < 1000) {
+                this.bullet.translateZ(-1);
+            } else {
+                this.clock.stop();
+                this.scene.remove(this.bullet);
+            }
+        }
 
         // setup the render function to "autoloop"
         requestAnimationFrame(() => this.render());
@@ -63,53 +86,47 @@ export default class App {
         this.renderer.setSize(w, h);
     }
 
-    onKeyPressed(event) {
+    handleKeyPressed(event) {
         if (event.code === "ArrowLeft") {
-            // LEFT
-            // move current lane to left if possible
-            sphere.changeLane("left");
+            this.changeLane("left");
         } else if (event.code === "ArrowRight") {
-            // LEFT
-            // move current lane to left if possible
-            sphere.changeLane("right");
+            this.changeLane("right");
+        } else if (event.code === "Space" && !this.clock.running) {
+            this.bullet = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 4), new THREE.MeshBasicMaterial({
+                color: "aqua"
+            }));
+            this.bullet.position.copy(this.spaceship.getWorldPosition(new THREE.Vector3()));
+            this.scene.add(this.bullet);
+            console.log("Fire!");
+            this.clock.start();
         }
     }
 
-    initLaneSystem(){
-        const lanes = {
-            LEFT: "left",
-            CENTER: "center",
-            RIGHT: "right"
-        };
-
-        THREE.Mesh.prototype.lane = lanes.CENTER;
-
-        THREE.Mesh.prototype.changeLane = function (direction) {
-            switch (this.lane) {
-                case lanes.LEFT:
-                    if (direction === "right") {
-                        sphere.position.x = 0;
-                        this.lane = lanes.CENTER;
-                    }
-                    break;
-                case lanes.CENTER:
-                    if (direction === "left") {
-                        sphere.position.x = -10;
-                        this.lane = lanes.LEFT;
-                    } else if (direction === "right") {
-                        sphere.position.x = 10;
-                        this.lane = lanes.RIGHT;
-                    }
-                    break;
-                case lanes.RIGHT:
-                    if (direction === "left") {
-                        sphere.position.x = 0;
-                        this.lane = lanes.CENTER;
-                    }
-                    break;
-                default:
-                // do nothing (invalid movement)
-            }
-        };
+    changeLane(direction) {
+        switch (this.lane) {
+            case this.lanes.LEFT:
+                if (direction === "right") {
+                    this.spaceship.position.x = 0;
+                    this.lane = this.lanes.CENTER;
+                }
+                break;
+            case this.lanes.CENTER:
+                if (direction === "left") {
+                    this.spaceship.position.x = -1 / 4 * 200;
+                    this.lane = this.lanes.LEFT;
+                } else if (direction === "right") {
+                    this.spaceship.position.x = 1 / 4 * 200;
+                    this.lane = this.lanes.RIGHT;
+                }
+                break;
+            case this.lanes.RIGHT:
+                if (direction === "left") {
+                    this.spaceship.position.x = 0;
+                    this.lane = this.lanes.CENTER;
+                }
+                break;
+            default:
+            // do nothing (invalid movement)
+        }
     }
 }
